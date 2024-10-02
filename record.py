@@ -1,4 +1,5 @@
 import re
+from datetime import date, time
 from exceptions import InvalidRecord, UndefinedRecordType, Ignore
 
 class FIASRecord:
@@ -27,7 +28,23 @@ class FIASRecord:
             # Process the record
     """
     
-    ignore_attrs = ['DS', 'DE', 'LS', 'LE', 'LA']
+    ignore_attrs = [
+        # Database Synchronization
+        'DS', # Database Resync start
+        'DE', # Database Resync end
+        'LS', # Link Start
+        'LE', # Link End
+        'LA', # Link Alive
+    ]
+    to_pms = (
+        'LD', # Link Description
+        'LR', # Link Record
+        # Database Synchronization
+        'DR', # Database Resync request
+        # Night Audit
+        'NS', # Night Audit Start
+        'NE', # Night Audit End
+    )
     required_attrs = {
         'GI': ['GID', 'RN', 'GN'],
         'GC': ['GID', 'RN',],
@@ -58,6 +75,15 @@ class FIASRecord:
         # Convert GID to int if it exists
         if hasattr(self, 'GID'):
             self.GID = int(self.GID)
+        
+        # Convert Date field to date
+        for f in ('DA', 'GA', 'GD'):
+            setattr(self, f, date.strftime(getattr(self, f)), '%y%m%d')
+
+        # Convert Time field to time
+        for f in ('TI','DU'): 
+            setattr(self, f, time.strftime(getattr(self, f)), '%H%M%S')
+    
 
     def is_valid(self, raise_exception: bool = False) -> bool:
         """
@@ -86,6 +112,7 @@ class FIASRecord:
             if raise_exception:
                 raise InvalidRecord(f"{self.type} is missing attributes: {', '.join(missing)}")
             return False
+
         return True
 
     def __str__(self):
