@@ -79,12 +79,12 @@ class FIASRecord:
         # Convert Date field to date
         for f in ('DA', 'GA', 'GD'):
             if hasattr(self, f):
-                setattr(self, f, date.strftime(getattr(self, f)), '%y%m%d')
+                setattr(self, f, date.strftime(getattr(self, f), '%y%m%d'))
 
         # Convert Time field to time
         for f in ('TI','DU'): 
             if hasattr(self, f):
-                setattr(self, f, time.strftime(getattr(self, f)), '%H%M%S')
+                setattr(self, f, time.strftime(getattr(self, f), '%H%M%S'))
     
 
     def is_valid(self, raise_exception: bool = False) -> bool:
