@@ -1,6 +1,6 @@
 import re
-from datetime import date, time
-from exceptions import InvalidRecord, UndefinedRecordType, Ignore
+from datetime import datetime
+from fias.exceptions import InvalidRecord, UndefinedRecordType, Ignore
 
 class FIASRecord:
     """
@@ -79,12 +79,12 @@ class FIASRecord:
         # Convert Date field to date
         for f in ('DA', 'GA', 'GD'):
             if hasattr(self, f):
-                setattr(self, f, date.strftime(getattr(self, f), '%y%m%d'))
+                setattr(self, f, datetime.strptime(getattr(self, f), '%y%m%d').date())
 
         # Convert Time field to time
         for f in ('TI','DU'): 
             if hasattr(self, f):
-                setattr(self, f, time.strftime(getattr(self, f), '%H%M%S'))
+                setattr(self, f, datetime.strptime(getattr(self, f), '%H%M%S').time())
     
 
     def is_valid(self, raise_exception: bool = False) -> bool:
@@ -118,7 +118,7 @@ class FIASRecord:
         return True
 
     def __str__(self):
-        return f"Record(type={self.type}, message={self.message})"
+        return str(self.message)
 
     def __repr__(self):
         return f"Record(type={self.type}, message={self.message})"

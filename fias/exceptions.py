@@ -6,7 +6,7 @@ class InvalidRecord(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"{self.message}: {self.record}"
+        return f"{self.message}: {self.record}" # pragma: no cover
 
 class UndefinedRecordType(Exception):
     """Exception raised for undefined record type"""
@@ -16,7 +16,7 @@ class UndefinedRecordType(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"{self.message}: {self.record}"
+        return f"{self.message}: {self.record}" # pragma: no cover
     
 class Ignore(Exception):
     """Exception raised for ignore record"""
@@ -26,4 +26,4 @@ class Ignore(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"{self.message}: {self.record}"
+        return f"{self.message}: {self.record}" # pragma: no cover
